@@ -38,6 +38,9 @@
 # [*patch_splay*]
 #   Patching is delayed by up to $patch_splay to combat against thundering herds
 #
+# [*patch_mnt_day*]
+#   Which day of the month should we patch? (1-31/*)
+#
 # === Additional Software Requirements
 #
 # The following binaries are required, and not installed automatically:
@@ -64,7 +67,8 @@ class patchmgmt (
   $patch_day = undef,
   $patch_email = undef,
   $patch_hour = undef,
-  $patch_splay = 120
+  $patch_splay = 120,
+  $patch_mnt_day = '*'
 ) {
   ##############################################################################
   # LOGIC KUNG FOO
@@ -73,15 +77,15 @@ class patchmgmt (
   $patch_r = any2bool( $patch )
 
   case downcase( $clean_day ) {
-    /^(mon|tue|wed|thu|fri|sat|sun)$/: { $clean_day_r = downcase( $clean_day ) }
+    /^(mon|tue|wed|thu|fri|sat|sun|\*)$/: { $clean_day_r = downcase( $clean_day ) }
     default: { fail( "Class[${name}] : invalid clean day passed" ) }
   }
   case downcase( $list_day ) {
-    /^(mon|tue|wed|thu|fri|sat|sun)$/: { $list_day_r = downcase( $list_day ) }
+    /^(mon|tue|wed|thu|fri|sat|sun|\*)$/: { $list_day_r = downcase( $list_day ) }
     default: { fail( "Class[${name}] : invalid list day passed" ) }
   }
   case downcase( $patch_day ) {
-    /^(mon|tue|wed|thu|fri|sat|sun)$/: { $patch_day_r = downcase( $patch_day ) }
+    /^(mon|tue|wed|thu|fri|sat|sun|\*)$/: { $patch_day_r = downcase( $patch_day ) }
     default: { fail( "Class[${name}] : invaild patch day passed" ) }
   }
 
@@ -102,6 +106,9 @@ class patchmgmt (
 
   validate_re( $patch_hour, '^([0-1]?[0-9]|2[0-3])$' )
   $patch_hour_r = $patch_hour
+  
+  validate_re( $patch_mnt_day, '^((([1-9]?)|([1-2][0-9])?)|([3][0-1]?)|(\*))$' )
+  $patch_mnt_day_r = $patch_mnt_day
 
   case $clean_email {
     undef: { $clean_email_r = 'root@localhost' }

@@ -6,6 +6,6 @@
 # |  |  |  |  |   .-- username to run as
 # |  |  |  |  |   |
 # *  *  *  *  *  user command to be executed
-0 <%= @patch_hour_r %> * * <%= @patch_day_r %> root /usr/local/sbin/runupdates
+0 <%= @patch_hour_r %> <%= @patch_mnt_day_r %> * <%= @patch_day_r %> root /usr/local/sbin/runupdates
 0 <%= @list_hour_r %> * * <%= @list_day_r %> root /usr/local/sbin/listupdates
 0 <%= @clean_hour_r %> * * <%= @clean_day_r %> root /usr/local/sbin/cleanupdates
